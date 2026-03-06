@@ -13,7 +13,7 @@ O Repository atue como a "única fonte de verdade", mediando a comunicação ent
 # Nova Estrutura de Pastas (Feature-First)
 A organização segue o padrão modular por funcionalidade, facilitando a manutenção e o isolamento de erros:
 
-Plaintext
+``` Plaintext
 
 lib/
  ├── core/              # Componentes globais, utilitários e constantes.
@@ -21,7 +21,8 @@ lib/
       └── todos/        # Feature de Tarefas.
            ├── data/          # Implementações: Models, DataSources e Repositories.
            ├── domain/        # Regras de Negócio: Entities e Interfaces de Repository.
-           └── presentation/  # Camada Visual: Widgets e ViewModels (Gerência de Estado).
+           └── presentation/  # Camada Visual: Widgets e ViewModels (Gerência de Estado). 
+```
 # Checklist de Implementação
 [x] Arquitetura Feature-First: Organização por funcionalidades.
 
@@ -34,7 +35,7 @@ lib/
 [x] Documentação Técnica: Criação do arquivo ARCH.md detalhando as decisões.
 
 # Como Executar
-Certifique-se de ter o Flutter instalado em sua máquina.
+``` Certifique-se de ter o Flutter instalado em sua máquina.
 
 Clone este repositório.
 
