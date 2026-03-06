@@ -1,39 +1,51 @@
-# TODO — Refatoração Arquitetural (Projeto Bagunçado)
+# Flutter Todo - Refatoração Arquitetural
+Este repositório contém um projeto de lista de tarefas (TODO) que passou por uma reestruturação completa. O objetivo principal foi transformar um projeto desorganizado em uma aplicação escalável e testável utilizando a abordagem Feature-First com princípios de Clean Architecture.
 
-Este projeto foi montado **de propósito** com:
-- **classes corretas** (responsabilidades adequadas dentro do arquivo),
-- porém **em lugares errados** na estrutura de pastas,
-- com **imports misturados** e uma estrutura pouco escalável.
+# Objetivo da Atividade
+Reorganizar a estrutura de pastas e responsabilidades, garantindo que:
 
-## Objetivo da atividade
-Refatorar para um padrão **feature-first** (por exemplo):
-```
+A UI seja puramente reativa e não conheça detalhes de implementação (API/Local Storage).
+
+O ViewModel/Controller gerencie o estado sem depender do BuildContext.
+
+O Repository atue como a "única fonte de verdade", mediando a comunicação entre dados remotos e locais.
+
+# Nova Estrutura de Pastas (Feature-First)
+A organização segue o padrão modular por funcionalidade, facilitando a manutenção e o isolamento de erros:
+
+Plaintext
+
 lib/
-  core/
-  features/
-    todos/
-      data/
-      domain/
-      presentation/
-```
+ ├── core/              # Componentes globais, utilitários e constantes.
+ └── features/          # Divisão por funcionalidades do app.
+      └── todos/        # Feature de Tarefas.
+           ├── data/          # Implementações: Models, DataSources e Repositories.
+           ├── domain/        # Regras de Negócio: Entities e Interfaces de Repository.
+           └── presentation/  # Camada Visual: Widgets e ViewModels (Gerência de Estado).
+# Checklist de Implementação
+[x] Arquitetura Feature-First: Organização por funcionalidades.
 
-### Regras
-1. Não altere a lógica interna das classes (o comportamento deve continuar).
-2. Você pode ajustar **imports**, **paths**, e criar pastas.
-3. A UI **não pode** chamar HTTP nem SharedPreferences diretamente.
-4. O ViewModel **não pode** conhecer Widgets / BuildContext (exceto mensagens via estado).
-5. O Repository deve centralizar a escolha entre remoto/local.
+[x] Desacoplamento de UI: Remoção de chamadas diretas a HTTP/SharedPreferences nos Widgets.
 
-## Checklist de entrega
-- Projeto compila e roda
-- Estrutura de pastas organizada (feature-first)
-- `ARCH.md` explicando:
-  - diagrama do fluxo (UI → VM → Repo → DataSources)
-  - justificativa da estrutura
-  - decisões de responsabilidade
+[x] ViewModel Puro: Lógica de estado independente de Widgets ou BuildContext.
 
-## Como rodar
-1. `flutter pub get`
-2. `flutter run`
+[x] Padrão Repository: Centralização da lógica de dados (Remoto vs Local).
 
-> API usada: JSONPlaceholder (https://jsonplaceholder.typicode.com/todos)
+[x] Documentação Técnica: Criação do arquivo ARCH.md detalhando as decisões.
+
+# Como Executar
+Certifique-se de ter o Flutter instalado em sua máquina.
+
+Clone este repositório.
+
+Instale as dependências:
+
+Bash
+
+flutter pub get
+Execute o projeto:
+
+Bash
+
+flutter run
+API utilizada: JSONPlaceholder
