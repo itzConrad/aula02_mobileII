@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// Note o import correto do viewmodel que está na pasta ao lado
 import '../viewmodels/product_viewmodel.dart';
+import 'product_detail_page.dart';
 
 class ProductListPage extends StatelessWidget {
   const ProductListPage({super.key});
@@ -9,23 +9,7 @@ class ProductListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Produtos'),
-        backgroundColor: Colors.blueAccent,
-        actions: [
-          Consumer<ProductViewModel>(
-            builder: (context, vm, _) => Center(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: Text(
-                  'Favoritos: ${vm.favoriteCount}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
+      appBar: AppBar(title: const Text('Nossos Produtos')),
       body: Consumer<ProductViewModel>(
         builder: (context, vm, child) {
           return ListView.builder(
@@ -33,15 +17,18 @@ class ProductListPage extends StatelessWidget {
             itemBuilder: (context, index) {
               final product = vm.products[index];
               return ListTile(
+                leading: Image.network(product.imageUrl, width: 50, errorBuilder: (_, __, ___) => const Icon(Icons.image)),
                 title: Text(product.name),
                 subtitle: Text('R\$ ${product.price.toStringAsFixed(2)}'),
-                trailing: IconButton(
-                  icon: Icon(
-                    product.favorite ? Icons.star : Icons.star_border,
-                    color: product.favorite ? Colors.amber : null,
-                  ),
-                  onPressed: () => vm.toggleFavorite(product),
-                ),
+                onTap: () {
+                  // Envia o objeto 'product' para a próxima tela
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProductDetailPage(product: product),
+                    ),
+                  );
+                },
               );
             },
           );

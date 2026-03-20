@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
-// Note que ele sobe dois níveis para chegar em domain
-import '../../domain/entities/product.dart'; 
+import '../../domain/entities/product.dart';
 
 class ProductViewModel extends ChangeNotifier {
   final List<Product> _products = [
-    Product(name: 'Notebook', price: 3500.0),
-    Product(name: 'Mouse', price: 120.0),
-    Product(name: 'Teclado', price: 250.0),
-    Product(name: 'Monitor', price: 900.0),
+    Product(
+      id: 1,
+      name: 'Notebook Pro',
+      price: 4500.0,
+      description: 'Um notebook potente para trabalho e jogos.',
+      imageUrl: 'https://picsum.photos/id/1/400/300',
+    ),
+    Product(
+      id: 2,
+      name: 'Mouse Gamer',
+      price: 150.0,
+      description: 'Sensor de alta precisão e luzes RGB.',
+      imageUrl: 'https://picsum.photos/id/2/400/300',
+    ),
   ];
 
   List<Product> get products => _products;
-
-  void toggleFavorite(Product product) {
-    product.favorite = !product.favorite;
-    notifyListeners();
-  }
-
-  int get favoriteCount => _products.where((p) => p.favorite).length;
 }
