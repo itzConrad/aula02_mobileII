@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'features/todos/presentation/viewmodels/product_viewmodel.dart';
-import 'features/todos/presentation/pages/home_page.dart';
+import 'screens/home_screen.dart'; // Mude a importação para a Home
 
 void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ProductViewModel()),
-      ],
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: HomePage(), // Inicia pela tela inicial agora
+  runApp(const MeuApp());
+}
+
+class MeuApp extends StatelessWidget {
+  const MeuApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'App de Produtos',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
-    ),
-  );
+      home: const HomeScreen(), // Ponto de entrada alterado!
+      debugShowCheckedModeBanner: false,
+    );
+  }
 }
