@@ -1,50 +1,31 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
-import '../services/product_service.dart';
+import 'package:provider/provider.dart';
+import '../controllers/product_controller.dart';
 import 'product_form_screen.dart';
 import 'product_detail_screen.dart';
 
-class ProductListScreen extends StatefulWidget {
-  @override
-  _ProductListScreenState createState() => _ProductListScreenState();
-}
-
-class _ProductListScreenState extends State<ProductListScreen> {
-  final ProductService _productService = ProductService();
-  late Future<List<Product>> _products;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadProducts();
-  }
-
-  void _loadProducts() {
-    setState(() {
-      _products = _productService.fetchProducts();
-    });
-  }
+class ProductListScreen extends StatelessWidget {
+  const ProductListScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Produtos')),
-      body: FutureBuilder<List<Product>>(
-        future: _products,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+      // O Consumer "escuta" o Controller e refaz a tela sozinho quando há mudanças
+      body: Consumer<ProductController>(
+        builder: (context, controller, child) {
+          if (controller.isLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Erro: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          }
+
+          if (controller.products.isEmpty) {
             return const Center(child: Text('Nenhum produto encontrado.'));
           }
 
-          final products = snapshot.data!;
           return ListView.builder(
-            itemCount: products.length,
+            itemCount: controller.products.length,
             itemBuilder: (context, index) {
-              final product = products[index];
+              final product = controller.products[index];
               return ListTile(
                 title: Text(product.name),
                 subtitle: Text('R\$ ${product.price.toStringAsFixed(2)}'),
@@ -57,20 +38,16 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.edit, color: Colors.blue),
-                      onPressed: () async {
-                        await Navigator.push(
+                      onPressed: () {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(builder: (_) => ProductFormScreen(product: product)),
                         );
-                        _loadProducts(); // Recarrega após edição
                       },
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () async {
-                        await _productService.deleteProduct(product.id!);
-                        _loadProducts(); // Recarrega após exclusão
-                      },
+                      onPressed: () => controller.removeProduct(product.id!),
                     ),
                   ],
                 ),
@@ -81,12 +58,11 @@ class _ProductListScreenState extends State<ProductListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () async {
-          await Navigator.push(
+        onPressed: () {
+          Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => ProductFormScreen()),
+            MaterialPageRoute(builder: (_) => const ProductFormScreen()),
           );
-          _loadProducts(); // Recarrega após cadastro
         },
       ),
     );

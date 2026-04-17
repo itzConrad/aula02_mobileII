@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart'; // Mude a importação para a Home
+import 'package:provider/provider.dart'; // Importação nova
+import 'controllers/product_controller.dart'; // Importação nova
+import 'screens/home_screen.dart';
 
 void main() {
-  runApp(const MeuApp());
+  runApp(
+    // Envolvemos o App com o ChangeNotifierProvider
+    ChangeNotifierProvider(
+      create: (context) => ProductController(),
+      child: const MeuApp(),
+    ),
+  );
 }
 
 class MeuApp extends StatelessWidget {
@@ -12,10 +20,8 @@ class MeuApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'App de Produtos',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const HomeScreen(), // Ponto de entrada alterado!
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

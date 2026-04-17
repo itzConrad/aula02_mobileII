@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/product_service.dart';
+import 'package:provider/provider.dart';
+import '../controllers/product_controller.dart';
 
 class ProductFormScreen extends StatefulWidget {
   final Product? product; // Se for nulo, é cadastro. Se tiver dados, é edição.
@@ -31,21 +33,23 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   void _saveProduct() async {
     if (_formKey.currentState!.validate()) {
       final product = Product(
-        id: widget.product?.id, // Mantém o ID se for edição
+        id: widget.product?.id,
         name: _nameController.text,
         price: double.parse(_priceController.text),
         description: _descriptionController.text,
+        imageUrl: widget.product?.imageUrl ?? 'https://via.placeholder.com/150',
       );
 
       try {
-        if (widget.product == null) {
-          await _productService.addProduct(product);
-        } else {
-          await _productService.updateProduct(product);
-        }
-        Navigator.pop(context); // Volta para a tela anterior
+        // Agora usamos o Provider para chamar o método saveProduct
+        final controller = Provider.of<ProductController>(context, listen: false);
+        await controller.saveProduct(product);
+        
+        if (mounted) Navigator.pop(context); // Volta para a tela anterior com segurança
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erro ao salvar: $e')));
+        }
       }
     }
   }
