@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/product.dart';
-import '../services/product_service.dart';
+import '../../models/product.dart';
+import '../../services/product_service.dart';
 import 'package:provider/provider.dart';
-import '../controllers/product_controller.dart';
+import '../viewmodels/product_viewmodel.dart'; 
 
 class ProductFormScreen extends StatefulWidget {
   final Product? product; // Se for nulo, é cadastro. Se tiver dados, é edição.
@@ -41,11 +41,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       );
 
       try {
-        // Agora usamos o Provider para chamar o método saveProduct
-        final controller = Provider.of<ProductController>(context, listen: false);
-        await controller.saveProduct(product);
-        
-        if (mounted) Navigator.pop(context); // Volta para a tela anterior com segurança
+        // MUDANÇA AQUI: Trocamos ProductController por ProductViewModel
+        final viewModel = Provider.of<ProductViewModel>(context, listen: false);
+        await viewModel.saveProduct(product);
+
+        if (mounted) Navigator.pop(context); 
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erro ao salvar: $e')));

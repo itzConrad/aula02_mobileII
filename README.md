@@ -1,12 +1,16 @@
-# Flutter Todo - Refatoração Arquitetural
-Este repositório contém um projeto de lista de tarefas (TODO) que passou por uma reestruturação completa. O objetivo principal foi transformar um projeto desorganizado em uma aplicação escalável e testável utilizando a abordagem Feature-First com princípios de Clean Architecture.
+# Respostas do Questionário - Atividade 2 (Arquitetura)
 
-# Objetivo da Atividade
-Reorganizar a estrutura de pastas e responsabilidades, garantindo que:
+**1. Em qual camada foi implementado o mecanismo de cache? Explique por que essa decisão é adequada dentro da arquitetura proposta.**
+O mecanismo de cache foi implementado na camada de Dados (Data Layer), especificamente em um DataSource local (`LocalDataSource`), sendo orquestrado pelo `ProductRepository`. Essa decisão é adequada porque isola a lógica de armazenamento da camada de Apresentação (UI e ViewModel). O Repository atua como uma única fonte de verdade: ele abstrai a complexidade e decide de forma transparente se os dados devem vir do RemoteDataSource (API) ou do LocalDataSource (Cache), entregando a informação limpa para o ViewModel.
 
-A UI seja puramente reativa e não conheça detalhes de implementação (API/Local Storage).
+**2. Por que o ViewModel não deve realizar chamadas HTTP diretamente?**
+Porque isso fere o princípio da Responsabilidade Única (SRP). O papel do ViewModel é exclusivamente gerenciar o estado da interface (carregando, sucesso, erro) e preparar os dados para exibição na View. Colocar chamadas HTTP diretamente nele criaria um forte acoplamento com a infraestrutura externa, tornando o código difícil de testar, de reutilizar e de manter caso a forma de comunicação mude.
 
-O ViewModel/Controller gerencie o estado sem depender do BuildContext.
+**3. O que poderia acontecer se a interface acessasse diretamente o DataSource?**
+A interface (UI) ficaria intimamente acoplada à implementação técnica de busca de dados. Se o DataSource mudasse de uma API REST para o Firebase, ou se a regra de negócio exigisse buscar do cache antes da API, todo o código visual da tela precisaria ser reescrito. Além disso, a UI ficaria poluída com lógicas complexas de requisição e conversão de dados, dificultando a leitura, a manutenção e impossibilitando a realização de testes unitários apenas na regra de negócios.
+
+**4. Como essa arquitetura facilitaria a substituição da API por um banco de dados local?**
+Como a UI se comunica apenas com o ViewModel, e o ViewModel se comunica apenas com a
 
 O Repository atue como a "única fonte de verdade", mediando a comunicação entre dados remotos e locais.
 
